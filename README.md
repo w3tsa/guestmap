@@ -12,17 +12,26 @@
 - [x] with the browser
 - [x] with their IP using an API
 - [x] Show a pin at the users location
-- [x] Show a form to submit a message - [ ] when form is submitted - POST /message
+- [x] Show a form to submit a message
+- [ ] when form is submitted - POST /message
 
 * [ ] Setup server with create-express-api
 * [ ] Add monk and joi
-* [ ] POST /messages - latitude - longitude - name - message - datetime
+* [ ] POST /messages
+
+- latitude
+- longitude
+- name
+- message
+- datetime
+
 * [ ] When the page loads get all messages
-      [ ] GET /messages
+
+- GET /messages
+
 * [ ] Add pins to the map
 * [ ] Click a pin to see the message
-* [ ] DEPLOY!
-      [ ] https://something
+* [ ] DEPLOY! - https://something
   - Refactor React app
     - seperate components
     - seperate file for API requests \* seperate file for Location requests
