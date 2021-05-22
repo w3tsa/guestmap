@@ -17,7 +17,7 @@
 
 * [x] Setup server with express
 * [x] Add monk and joi
-* [ ] POST /messages
+* [x] POST /messages
 
 - latitude
 - longitude
