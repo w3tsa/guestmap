@@ -22,3 +22,7 @@ body {
 .button {
   margin-top: 10px;
 }
+
+video {
+  width: 100%;
+}
