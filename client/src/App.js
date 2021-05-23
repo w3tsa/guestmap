@@ -109,7 +109,9 @@ useEffect(() => {
       })
     });
   })
-},[API_URL, userLocation])
+},[])
+
+//API_URL, userLocation
 
 const formSubmitted = (e) => {
   e.preventDefault();
