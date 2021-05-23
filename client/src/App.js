@@ -36,9 +36,7 @@ function App() {
       message: '' 
   })
 
-  //https://guestmap-api.vercel.app/api/v1/messages
-
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' : ''
+const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' : 'https://damp-headland-44963.herokuapp.com/api/v1/messages'
  
 let myIcon = L.icon({
     iconUrl,
@@ -76,14 +74,16 @@ useEffect(() => {
 
   setAllMessages(messages)
   });
+}, [API_URL])
+
+useEffect(() => {  
   navigator.geolocation.getCurrentPosition((position) => {
     setState({
       location: {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       },           
-    })
-    
+    })    
     setUserLocation({
       ...userLocation,
       haveUsersLocation: true,
@@ -109,7 +109,7 @@ useEffect(() => {
       })
     });
   })
-},[API_URL, userLocation])
+},[userLocation])
 
 const formSubmitted = (e) => {
   e.preventDefault();
@@ -159,7 +159,7 @@ const handleChange = (e) => {
 const position = [state.location.lat, state.location.lng];
 return (
   <Fragment>
-    <MapContainer className='map' center={position} zoom={userLocation.zoom} scrollWheelZoom={false}>
+    <MapContainer className='map' center={position} zoom={userLocation.zoom} scrollWheelZoom={true}>
       <TileLayer
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
