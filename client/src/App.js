@@ -28,7 +28,7 @@ function App() {
 
   const [userLocation, setUserLocation] = useState({
     haveUsersLocation: false,
-    zoom: 2,
+    zoom: 3,
   })
 
   const [user, setUser] = useState({
@@ -60,7 +60,19 @@ useEffect(() => {
   fetch(API_URL)
   .then(res => res.json())
   .then(messages => {
-    setAllMessages(messages)
+  const haveSeenLocation = {}
+  messages =  messages.reduce((all, message) => {
+    const key = `${message.latitude}${message.longitude}`;
+    if(haveSeenLocation[key]) {
+      haveSeenLocation[key].otherMessages = haveSeenLocation[key].otherMessages || []
+      haveSeenLocation[key].otherMessages.push(message)
+    } else {
+      haveSeenLocation[key] = message;
+      all.push(message)
+    } return all
+  }, [])
+
+  setAllMessages(messages)
   });
   navigator.geolocation.getCurrentPosition((position) => {
     setState({
@@ -71,8 +83,9 @@ useEffect(() => {
     })
     
     setUserLocation({
+      ...userLocation,
       haveUsersLocation: true,
-      zoom: 13,  
+      zoom: 13
     })
     
   }, () => {
@@ -88,6 +101,7 @@ useEffect(() => {
       })
       
       setUserLocation({
+        ...userLocation,
         haveUsersLocation: true,
         zoom: 13,  
       })
@@ -102,12 +116,8 @@ const formSubmitted = (e) => {
     name: user.name,
     message: user.message
   }
-  // // testing...
-  // allMessages.map(message => {
-  //   return console.log(message.name)
-  // })
-  const result =  schema.validate(userMessage)
-  if(!result.error) {
+  const {error} =  schema.validate(userMessage)
+  if(!error) {
     fetch(API_URL, {
       method: 'POST',
       headers: {
@@ -121,7 +131,7 @@ const formSubmitted = (e) => {
     })
     .then(res => res.json())
     .then(message => {
-      console.log(state.messages)
+      // console.log(state.messages)
       setTimeout(() => {
         setLoader({
           sendingMessage: false,
@@ -129,7 +139,12 @@ const formSubmitted = (e) => {
         })
       }, 4000)
     })
+    // window.location.reload();
+  } else {
+    alert(error)
+    setLoader({sendingMessage: false})
   }
+  
 }
 
 const handleChange = (e) => {
@@ -152,9 +167,9 @@ return (
         position={position}
         icon={myIcon}
         >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
+          {/* <Popup>
+            {allMessages.length > 0 && `${allMessages[allMessages.length - 1].name} : ${allMessages[allMessages.length - 1].message}`}
+          </Popup> */}
         </Marker>
       }
 
@@ -165,7 +180,8 @@ return (
         key={message._id}
         >
           <Popup>
-            <em>{message.name}:</em> {message.message}
+            <p><em>{message.name}:</em> {message.message}</p>
+            { message.otherMessages && message.otherMessages.map(message => {return <p key={message._id}><em>{message.name}:</em> {message.message}</p>})}
           </Popup>
         </Marker>)
       })}
