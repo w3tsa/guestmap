@@ -25,12 +25,12 @@
 - message
 - datetime
 
-* [ ] When the page loads get all messages
+* [x] When the page loads get all messages
 
 - GET /messages
 
-* [ ] Add pins to the map
-* [ ] Click a pin to see the message
+* [x] Add pins to the map
+* [x] Click a pin to see the message
 * [ ] DEPLOY! - https://something
   - Refactor React app
     - seperate components
