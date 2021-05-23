@@ -36,7 +36,7 @@ function App() {
       message: '' 
   })
 
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' : 'https://guestmap-api.vercel.app/'
+const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' : 'https://guestmap-api.vercel.app/api/v1/messages'
  
 let myIcon = L.icon({
     iconUrl,
