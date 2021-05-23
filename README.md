@@ -31,7 +31,7 @@
 
 * [x] Add pins to the map
 * [x] Click a pin to see the message
-* [ ] DEPLOY! - https://something
+* [x] DEPLOY! - https://guestmap.netlify.app/
   - Refactor React app
     - seperate components
     - seperate file for API requests \* seperate file for Location requests
