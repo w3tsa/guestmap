@@ -36,7 +36,7 @@ function App() {
       message: '' 
   })
 
-const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' : 'https://damp-headland-44963.herokuapp.com/api/v1/messages'
+const API_URL = window.location.hostname === 'localhost' ? 'http://localhost:5000/api/v1/messages' :  'https://damp-headland-44963.herokuapp.com/api/v1/messages'
  
 let myIcon = L.icon({
     iconUrl,
@@ -62,7 +62,7 @@ useEffect(() => {
   .then(messages => {
   const haveSeenLocation = {}
   messages =  messages.reduce((all, message) => {
-    const key = `${message.latitude}${message.longitude}`;
+  const key = `${message.latitude}${message.longitude}`;
     if(haveSeenLocation[key]) {
       haveSeenLocation[key].otherMessages = haveSeenLocation[key].otherMessages || []
       haveSeenLocation[key].otherMessages.push(message)
@@ -76,7 +76,7 @@ useEffect(() => {
   });
 }, [API_URL])
 
-useEffect(() => {  
+useEffect(() => {
   navigator.geolocation.getCurrentPosition((position) => {
     setState({
       location: {
@@ -89,27 +89,22 @@ useEffect(() => {
       haveUsersLocation: true,
       zoom: 13
     })
-    
-  }, () => {
-    console.error('no location was passed')
-    fetch('https://ipapi.co/json')
-    .then(res => res.json())
-    .then(location => {
-      setState({
-        location: {
-          lat: location.latitude,
-          lng: location.longitude
-        },  
-      })
-      
-      setUserLocation({
-        ...userLocation,
-        haveUsersLocation: true,
-        zoom: 13,  
-      })
-    });
-  })
-},[userLocation])
+  }, async () => {
+    const response = await fetch('https://ipapi.co/json');
+    const location = await response.json();
+    setState({
+      location: {
+        lat: location.latitude,
+        lng: location.longitude
+      },           
+    })    
+    setUserLocation({
+      ...userLocation,
+      haveUsersLocation: true,
+      zoom: 13
+    })
+  }) 
+}, [])
 
 const formSubmitted = (e) => {
   e.preventDefault();
