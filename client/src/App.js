@@ -44,10 +44,11 @@ function App() {
     message: "",
   });
 
-  const API_URL =
-    window.location.hostname === "localhost"
-      ? "http://localhost:5000/api/v1/messages"
-      : "https://damp-headland-44963.herokuapp.com/api/v1/messages";
+  // const API_URL =
+  //   window.location.hostname === "localhost"
+  //     ? "http://localhost:5000/api/v1/messages"
+  //     : "https://damp-headland-44963.herokuapp.com/api/v1/messages";
+  const API_URL = "http://localhost:5000/api/v1/messages";
 
   let myIcon = L.icon({
     iconUrl,
@@ -87,40 +88,43 @@ function App() {
 
         setAllMessages(messages);
       });
-  }, [API_URL]);
+  }, []);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setState({
-          location: {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          },
-        });
-        setUserLocation({
-          ...userLocation,
-          haveUsersLocation: true,
-          zoom: 13,
-        });
-      },
-      async () => {
-        const response = await fetch("https://ipapi.co/json");
-        const location = await response.json();
-        setState({
-          location: {
-            lat: location.latitude,
-            lng: location.longitude,
-          },
-        });
-        setUserLocation({
-          ...userLocation,
-          haveUsersLocation: true,
-          zoom: 13,
-        });
-      }
-    );
-  }, [userLocation]);
+    const successCallback = (position) => {
+      setState((prevState) => ({
+        ...prevState,
+        location: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        },
+      }));
+      setUserLocation((prevLocation) => ({
+        ...prevLocation,
+        haveUsersLocation: true,
+        zoom: 13,
+      }));
+    };
+
+    const errorCallback = async () => {
+      const response = await fetch("https://ipapi.co/json");
+      const location = await response.json();
+      setState((prevState) => ({
+        ...prevState,
+        location: {
+          lat: location.latitude,
+          lng: location.longitude,
+        },
+      }));
+      setUserLocation((prevLocation) => ({
+        ...prevLocation,
+        haveUsersLocation: true,
+        zoom: 13,
+      }));
+    };
+
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+  }, []);
 
   const formSubmitted = (e) => {
     e.preventDefault();
@@ -167,6 +171,10 @@ function App() {
     });
   };
   const position = [state.location.lat, state.location.lng];
+  {
+    console.log("rendering");
+    console.log("messages", allMessages);
+  }
   return (
     <Fragment>
       <MapContainer
@@ -186,6 +194,11 @@ function App() {
           </Popup> */}
           </Marker>
         )}
+        {/* <Marker position={[45, -88]}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker> */}
 
         {allMessages.map((message) => {
           return (
